@@ -260,13 +260,6 @@ input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
   background:none;font-size:.76rem;font-family:inherit;padding:3px 7px;border-radius:100px;transition:.2s}
 .dc-del:hover{color:var(--red);background:var(--reds)}
 
-/* ── add stop ── */
-.add-controls{display:flex;gap:10px;margin-top:16px;padding-left:24px}
-.btn-add-stop{background:var(--surf);border:1px dashed var(--bdh);color:var(--muted);
-  padding:11px;border-radius:var(--r);width:100%;font-weight:500;cursor:pointer;
-  transition:.25s;font-size:.84rem;font-family:'DM Sans',sans-serif}
-.btn-add-stop:hover{border-color:var(--ac);color:var(--ac);background:var(--acs)}
-
 /* ══════════════════════════════════════════
    VIEW MODE
 ══════════════════════════════════════════ */
@@ -419,13 +412,11 @@ body.view-mode .dow-badge{display:inline-flex}
 </head>
 <body>
 
-<!-- Top bar -->
 <div class="top-bar">
   <div class="save-status">
     <div class="save-dot" id="save-dot"></div>
     <span id="save-text" style="font-size:.76rem;color:var(--muted)">Saved</span>
   </div>
-  <!-- Mode Toggle -->
   <div class="mode-toggle">
     <button class="mt-btn active" id="mt-edit" onclick="setMode('edit')">✎ Edit</button>
     <button class="mt-btn" id="mt-view" onclick="setMode('view')">👁 View</button>
@@ -433,7 +424,6 @@ body.view-mode .dow-badge{display:inline-flex}
   <button onclick="clearSave()" class="btn-reset edit-only">↺</button>
 </div>
 
-<!-- Action bar -->
 <div class="action-bar">
   <div class="stat">
     <span class="stat-lbl">Spend</span>
@@ -446,10 +436,10 @@ body.view-mode .dow-badge{display:inline-flex}
   </div>
   <div class="ab-div"></div>
   <button onclick="addDay()" class="btn-secondary edit-only">+ Day</button>
+  <button onclick="exportHTML()" class="btn-secondary">⬇ HTML</button>
   <button onclick="downloadPDF()" class="btn-primary">⬇ PDF</button>
 </div>
 
-<!-- Main itinerary -->
 <div id="itinerary-container">
   <div class="doc-header">
     <div class="cover-wrap">
@@ -465,7 +455,6 @@ body.view-mode .dow-badge{display:inline-flex}
   <div id="days-wrapper"></div>
 </div>
 
-<!-- Hidden PDF render stage -->
 <div id="pdf-stage"></div>
 
 <script>
@@ -772,6 +761,30 @@ function clearSave() {
   }
 }
 
+/* ── HTML Export Function ── */
+function exportHTML() {
+  let pageHTML = document.documentElement.outerHTML;
+  const currentData = localStorage.getItem('itin_v4');
+
+  if (currentData) {
+    // Escape special characters so the injected string doesn't break
+    const safeData = currentData.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$/g, '\\$');
+    
+    // Inject a script at the top of the <head> to pre-fill the recipient's local storage
+    const injection = `<script>localStorage.setItem('itin_v4', \`${safeData}\`);<\/script>`;
+    pageHTML = pageHTML.replace('<head>', '<head>\n' + injection);
+  }
+
+  // Create and download the new, self-contained HTML file
+  const blob = new Blob(['<!DOCTYPE html>\n', pageHTML], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.getElementById('trip-title').value.trim() || 'Itinerary') + '_Shared.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
 /* ══════════════════════════════════════════
    PDF — build a clean HTML representation
    then render it at 390px mobile width
@@ -923,3 +936,5 @@ window.addEventListener('load', loadData);
 </script>
 </body>
 </html>
+
+      
