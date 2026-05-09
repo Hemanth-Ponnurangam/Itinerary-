@@ -18,13 +18,22 @@
   --ok:#2dd4b0;--warn:#f59e0b;
   --nt:#8b5cf6;--nts:rgba(139,92,246,.12);
   --r:14px;--rs:8px;
-  --s1:0 4px 16px rgba(0,0,0,.4);--s2:0 12px 40px rgba(0,0,0,.7)
+  --s1:0 4px 16px rgba(0,0,0,.4);--s2:0 12px 40px rgba(0,0,0,.7);
+  /* category accent colors */
+  --cat-explore:#00c8a8;--cat-dining:#f59e0b;--cat-stay:#8b5cf6;
+  --cat-transit:#3b82f6;--cat-event:#ec4899;--cat-shopping:#f97316
 }
 html{scroll-behavior:smooth}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--txt);
   line-height:1.6;padding:20px 16px 130px;max-width:480px;margin:0 auto;min-height:100vh}
 body::before{content:'';position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.4;
   background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E")}
+
+/* ── scroll progress bar ── */
+.scroll-bar{position:fixed;top:0;left:0;height:2px;width:0%;
+  background:linear-gradient(90deg,var(--ac),#00e0c0);
+  z-index:9999;transition:width .08s linear;
+  box-shadow:0 0 10px var(--acg)}
 
 /* ── base inputs ── */
 input,select,textarea{font-family:'DM Sans',sans-serif;color:inherit;
@@ -63,23 +72,27 @@ input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
 /* ── action bar ── */
 .action-bar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
   background:rgba(13,13,26,.94);backdrop-filter:blur(20px) saturate(180%);
-  padding:12px 20px;border-radius:100px;display:flex;gap:16px;align-items:center;
+  padding:10px 16px;border-radius:100px;display:flex;gap:12px;align-items:center;
   box-shadow:var(--s2),0 0 0 1px rgba(255,255,255,.05);border:1px solid var(--bdm);z-index:1000;
   max-width:calc(100% - 32px)}
 .ab-div{width:1px;height:26px;background:var(--bdm);flex-shrink:0}
-.stat{display:flex;flex-direction:column}
-.stat-lbl{font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
-.stat-val{font-size:.95rem;font-weight:700;color:var(--ac);font-family:'Syne',sans-serif}
-.btn-primary{background:var(--ac);color:#000;border:none;padding:9px 18px;border-radius:100px;
-  font-weight:700;cursor:pointer;transition:.25s;font-size:.84rem;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.stat{display:flex;flex-direction:column;cursor:default}
+.stat-lbl{font-size:.58rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);font-weight:600}
+.stat-val{font-size:.9rem;font-weight:700;color:var(--ac);font-family:'Syne',sans-serif}
+.btn-primary{background:var(--ac);color:#000;border:none;padding:8px 16px;border-radius:100px;
+  font-weight:700;cursor:pointer;transition:.25s;font-size:.82rem;font-family:'DM Sans',sans-serif;white-space:nowrap}
 .btn-primary:hover{background:#00e0c0;box-shadow:0 0 20px var(--acg);transform:translateY(-1px)}
-.btn-secondary{background:transparent;color:var(--txt);border:1px solid var(--bdh);padding:9px 14px;
-  border-radius:100px;font-weight:500;cursor:pointer;transition:.2s;font-size:.84rem;
+.btn-secondary{background:transparent;color:var(--txt);border:1px solid var(--bdh);padding:8px 12px;
+  border-radius:100px;font-weight:500;cursor:pointer;transition:.2s;font-size:.82rem;
   font-family:'DM Sans',sans-serif;white-space:nowrap}
 .btn-secondary:hover{background:var(--surf2);border-color:var(--muted)}
+.btn-icon{background:transparent;color:var(--muted);border:1px solid var(--bdh);
+  padding:8px 10px;border-radius:100px;font-weight:500;cursor:pointer;transition:.2s;
+  font-size:.82rem;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.btn-icon:hover{background:var(--surf2);border-color:var(--muted);color:var(--txt)}
 
 /* ── doc header ── */
-.doc-header{margin-bottom:40px;position:relative;z-index:1}
+.doc-header{margin-bottom:32px;position:relative;z-index:1}
 .cover-wrap{width:100%;height:200px;border-radius:var(--r);overflow:hidden;
   margin-bottom:20px;position:relative;border:1px solid var(--bdm);
   background:linear-gradient(135deg,#0d0d1a 0%,#12122a 50%,#0a1020 100%)}
@@ -98,8 +111,18 @@ input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
   width:100%;color:var(--txt);letter-spacing:-.03em;line-height:1.15}
 .subtitle-input{font-size:.9rem;width:100%;color:var(--muted);margin-top:6px}
 
+/* ── trip stats strip ── */
+.trip-stats{display:flex;align-items:stretch;background:var(--surf);
+  border:1px solid var(--bdm);border-radius:var(--r);
+  margin:16px 0 28px;overflow:hidden}
+.ts-item{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  flex:1;padding:12px 8px;gap:2px}
+.ts-val{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:var(--ac)}
+.ts-lbl{font-size:.58rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600}
+.ts-div{width:1px;background:var(--bdm);flex-shrink:0;margin:10px 0}
+
 /* ── day container ── */
-.day-container{margin-bottom:40px;position:relative;z-index:1;animation:fadeUp .35s ease both}
+.day-container{margin-bottom:36px;position:relative;z-index:1;animation:fadeUp .35s ease both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 .day-header{display:flex;align-items:center;gap:10px;margin-bottom:22px;position:relative;flex-wrap:wrap}
 .day-header::after{content:'';position:absolute;bottom:-10px;left:0;right:0;height:1px;
@@ -124,6 +147,17 @@ input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
   border-radius:100px;transition:.2s;flex-shrink:0}
 .delete-day-btn:hover{color:var(--red);border-color:var(--red);background:var(--reds)}
 
+/* day spend badge */
+.day-spend{font-size:.7rem;font-weight:600;color:var(--muted);
+  background:var(--surf2);border:1px solid var(--bdm);
+  padding:2px 8px;border-radius:100px;white-space:nowrap;display:none}
+
+/* day collapse chevron */
+.day-collapse-btn{background:none;border:none;cursor:pointer;color:var(--dim);
+  font-size:.9rem;padding:4px;border-radius:6px;transition:.2s;flex-shrink:0;display:none}
+.day-collapse-btn:hover{color:var(--ac)}
+.day-container.collapsed .day-collapse-btn{transform:rotate(-90deg)}
+
 /* ── timeline ── */
 .stops-wrap{position:relative;padding-left:24px}
 .stops-wrap::before{content:'';position:absolute;left:7px;top:12px;bottom:12px;width:2px;
@@ -134,12 +168,23 @@ input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
   padding:16px 16px 12px 28px;margin-bottom:12px;position:relative;
   box-shadow:var(--s1);transition:border-color .2s,box-shadow .2s}
 .stop-card:hover{border-color:var(--bdh);box-shadow:var(--s2)}
+/* category left accent */
 .stop-card::after{content:'';position:absolute;left:0;top:20%;bottom:20%;
-  width:3px;background:var(--ac);border-radius:0 2px 2px 0;opacity:0;transition:opacity .2s}
-.stop-card:hover::after{opacity:.6}
+  width:3px;border-radius:0 2px 2px 0;opacity:0;transition:opacity .2s;background:var(--ac)}
+.stop-card:hover::after{opacity:.7}
+.stop-card[data-cat="dining"]::after{background:var(--cat-dining)}
+.stop-card[data-cat="stay"]::after{background:var(--cat-stay)}
+.stop-card[data-cat="transit"]::after{background:var(--cat-transit)}
+.stop-card[data-cat="event"]::after{background:var(--cat-event)}
+.stop-card[data-cat="shopping"]::after{background:var(--cat-shopping)}
 .stop-card::before{content:'';position:absolute;left:-22px;top:22px;
   width:10px;height:10px;background:var(--ac);border:2px solid var(--bg);
-  border-radius:50%;z-index:2;box-shadow:0 0 8px var(--acg);transition:transform .2s}
+  border-radius:50%;z-index:2;box-shadow:0 0 8px var(--acg);transition:transform .2s,background .2s}
+.stop-card[data-cat="dining"]::before{background:var(--cat-dining);box-shadow:0 0 8px rgba(245,158,11,.4)}
+.stop-card[data-cat="stay"]::before{background:var(--cat-stay);box-shadow:0 0 8px rgba(139,92,246,.4)}
+.stop-card[data-cat="transit"]::before{background:var(--cat-transit);box-shadow:0 0 8px rgba(59,130,246,.4)}
+.stop-card[data-cat="event"]::before{background:var(--cat-event);box-shadow:0 0 8px rgba(236,72,153,.4)}
+.stop-card[data-cat="shopping"]::before{background:var(--cat-shopping);box-shadow:0 0 8px rgba(249,115,22,.4)}
 .stop-card:hover::before{transform:scale(1.2)}
 .drag-handle{position:absolute;left:8px;top:18px;color:var(--dim);cursor:grab;
   font-size:1rem;user-select:none}
@@ -261,11 +306,49 @@ input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
 .dc-del:hover{color:var(--red);background:var(--reds)}
 
 /* ── add stop ── */
-.add-controls{display:flex;gap:10px;margin-top:16px;padding-left:24px}
+.add-controls{display:flex;gap:8px;margin-top:16px;padding-left:24px}
 .btn-add-stop{background:var(--surf);border:1px dashed var(--bdh);color:var(--muted);
-  padding:11px;border-radius:var(--r);width:100%;font-weight:500;cursor:pointer;
+  padding:11px;border-radius:var(--r);flex:1;font-weight:500;cursor:pointer;
   transition:.25s;font-size:.84rem;font-family:'DM Sans',sans-serif}
 .btn-add-stop:hover{border-color:var(--ac);color:var(--ac);background:var(--acs)}
+.btn-template{background:var(--surf);border:1px dashed var(--bdh);color:var(--muted);
+  padding:11px 14px;border-radius:var(--r);font-weight:500;cursor:pointer;
+  transition:.25s;font-size:.84rem;font-family:'DM Sans',sans-serif;white-space:nowrap;flex-shrink:0}
+.btn-template:hover{border-color:var(--nt);color:#c4b5fd;background:var(--nts)}
+
+/* ── template popup ── */
+.tmpl-popup{position:fixed;inset:0;z-index:2000;display:none;
+  background:rgba(7,7,15,.85);backdrop-filter:blur(12px);
+  align-items:flex-end;justify-content:center;padding:20px}
+.tmpl-popup.open{display:flex}
+.tmpl-sheet{background:var(--surf);border:1px solid var(--bdm);border-radius:20px 20px 16px 16px;
+  padding:20px;width:100%;max-width:448px;animation:sheetUp .25s ease}
+@keyframes sheetUp{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+.tmpl-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;margin-bottom:14px;
+  display:flex;justify-content:space-between;align-items:center}
+.tmpl-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.2rem;
+  padding:2px 6px;border-radius:6px;transition:.2s}
+.tmpl-close:hover{color:var(--red)}
+.tmpl-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tmpl-card{background:var(--surf2);border:1px solid var(--bdm);border-radius:var(--rs);
+  padding:12px;cursor:pointer;transition:.2s}
+.tmpl-card:hover{border-color:var(--ac);background:var(--acs)}
+.tmpl-card-icon{font-size:1.4rem;margin-bottom:4px}
+.tmpl-card-name{font-size:.82rem;font-weight:600;color:var(--txt)}
+.tmpl-card-desc{font-size:.72rem;color:var(--muted);margin-top:2px}
+
+/* ── toast notification ── */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--surf);border:1px solid var(--bdm);padding:10px 18px;border-radius:100px;
+  font-size:.82rem;font-weight:500;color:var(--txt);z-index:3000;
+  opacity:0;transition:all .3s ease;pointer-events:none;white-space:nowrap;
+  box-shadow:var(--s2)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.success{border-color:var(--ac);color:var(--ac)}
+.toast.error{border-color:var(--red);color:var(--red)}
+
+/* ── confetti canvas ── */
+#confetti-canvas{position:fixed;inset:0;pointer-events:none;z-index:9998}
 
 /* ══════════════════════════════════════════
    VIEW MODE
@@ -273,31 +356,44 @@ input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none}
 body.view-mode .edit-only{display:none!important}
 body.view-mode .drag-handle{display:none!important}
 
+/* view mode: inputs non-editable */
+body.view-mode .title-input{pointer-events:none}
+body.view-mode .subtitle-input{pointer-events:none}
+body.view-mode .cover-lbl{display:none}
+body.view-mode .cover-wrap{border:none}
+
 /* day header in view mode */
 body.view-mode .day-header{flex-wrap:nowrap}
 body.view-mode .day-badge{background:var(--acs);border-color:var(--ac)}
+body.view-mode .day-title{pointer-events:none}
+body.view-mode .day-date{pointer-events:none}
 body.view-mode .delete-day-btn{display:none}
+body.view-mode .day-badge-num{pointer-events:none}
+body.view-mode .day-spend{display:inline-flex}
+body.view-mode .day-collapse-btn{display:flex}
 
-/* stop card in view mode — clean & compact cards */
+/* collapsed day */
+body.view-mode .day-container.collapsed .stops-wrap,
+body.view-mode .day-container.collapsed .add-controls{display:none}
+body.view-mode .day-container.collapsed .day-header::after{opacity:.2}
+
+/* stop card in view mode */
 body.view-mode .stop-card{
   padding:10px 12px 10px 22px;
-  border:1px solid var(--bdm);
-  border-radius:var(--rs);
-  box-shadow:none;
-  background:var(--surf);
-  margin-bottom:7px}
+  border:1px solid var(--bdm);border-radius:var(--rs);
+  box-shadow:none;background:var(--surf);margin-bottom:7px}
 body.view-mode .stop-card:hover{border-color:var(--bdh);box-shadow:none}
-body.view-mode .stop-card::after{display:none}
+body.view-mode .stop-card::after{opacity:.5!important;top:15%;bottom:15%;width:2px}
 body.view-mode .stop-card::before{left:-20px;top:18px;width:8px;height:8px}
 body.view-mode .stop-row-1{flex-wrap:nowrap;margin-bottom:3px;gap:8px}
 body.view-mode .stop-row-2{margin-bottom:4px;gap:6px}
-body.view-mode .cost-wrap{background:rgba(0,200,168,.07);border:1px solid rgba(0,200,168,.2);padding:3px 10px;border-radius:100px;flex-shrink:0}
+body.view-mode .cost-wrap{background:rgba(0,200,168,.07);border:1px solid rgba(0,200,168,.2);
+  padding:3px 10px;border-radius:100px;flex-shrink:0}
 body.view-mode .cost-wrap span{font-size:.78rem}
 body.view-mode .cost-wrap input{font-size:.82rem;pointer-events:none;width:auto;min-width:20px}
 body.view-mode .time-input{font-size:.82rem;font-weight:700;color:var(--ac);width:68px;pointer-events:none}
 body.view-mode .loc-input{font-size:.88rem;font-weight:600;pointer-events:none}
 body.view-mode .cat-select{border:none;background:rgba(255,255,255,.04);padding:2px 6px;border-radius:100px;pointer-events:none;font-size:.72rem}
-body.view-mode .maps-input{pointer-events:none;font-size:.72rem;color:var(--ac);opacity:.75}
 body.view-mode .stop-toolbar{display:none}
 body.view-mode .notes-area{border:none!important;background:none!important;
   resize:none;pointer-events:none;padding:0;font-size:.8rem;color:var(--muted);min-height:0;line-height:1.5}
@@ -305,53 +401,33 @@ body.view-mode .todo-input{display:none}
 body.view-mode .todo-item input[type="checkbox"]{pointer-events:none}
 body.view-mode .gal-rm{display:none}
 body.view-mode .expand-sec{pointer-events:none}
+body.view-mode .expand-sec[data-open]{display:block}
+body.view-mode .gallery{gap:6px;margin-top:8px}
+body.view-mode .gal-img{width:70px;height:70px;border-radius:8px}
+
+/* maps link clickable in view mode */
+body.view-mode .maps-input{font-size:.72rem;color:var(--ac);opacity:.8;pointer-events:auto;cursor:pointer}
+body.view-mode .maps-input:hover{opacity:1;text-decoration:underline}
 
 /* transit in view mode */
 body.view-mode .transit-block{
   display:flex;align-items:center;gap:0;
   border:none;border-radius:0;background:none;
-  margin:-2px 0 2px -14px;
-  padding:5px 0 5px 10px;
-  position:relative}
+  margin:-2px 0 2px -14px;padding:5px 0 5px 10px;position:relative}
 body.view-mode .transit-block::before{
-  content:'';position:absolute;left:0;top:0;bottom:0;
-  width:2px;background:var(--bdm)}
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--bdm)}
 body.view-mode .transit-top{display:flex;align-items:center;gap:0;flex-shrink:0}
 body.view-mode .mode-pill:not(.selected){display:none}
-body.view-mode .mode-pill.selected{
-  border:none;background:none;padding:0;
-  color:var(--muted);font-size:.78rem;font-weight:500;
-  display:flex;align-items:center;gap:3px}
+body.view-mode .mode-pill.selected{border:none;background:none;padding:0;
+  color:var(--muted);font-size:.78rem;font-weight:500;display:flex;align-items:center;gap:3px}
 body.view-mode .transit-bottom{
-  display:flex;align-items:center;gap:0;
-  border:none;margin:0;padding:0;flex-wrap:nowrap}
+  display:flex;align-items:center;gap:0;border:none;margin:0;padding:0;flex-wrap:nowrap}
 body.view-mode .transit-bottom::before{
-  content:'·';color:var(--dim);font-size:.85rem;
-  margin:0 5px;flex-shrink:0}
+  content:'·';color:var(--dim);font-size:.85rem;margin:0 5px;flex-shrink:0}
 body.view-mode .t-field{background:none;border:none;padding:0;flex:none}
 body.view-mode .t-flbl{display:none}
-body.view-mode .t-field input{
-  font-size:.76rem;color:var(--muted);pointer-events:none;
-  flex:none;width:auto;min-width:0}
-body.view-mode .t-field+.t-field::before{
-  content:'·';color:var(--dim);font-size:.85rem;
-  margin:0 5px;flex-shrink:0}
-
-/* ── dow badge shows in view mode ── */
-body.view-mode .dow-badge{display:inline-flex}
-
-/* view mode: title & header */
-body.view-mode .title-input{pointer-events:none}
-body.view-mode .subtitle-input{pointer-events:none}
-body.view-mode .cover-lbl{display:none}
-body.view-mode .cover-wrap{border:none}
-
-/* view mode: gallery */
-body.view-mode .gallery{gap:6px;margin-top:8px}
-body.view-mode .gal-img{width:70px;height:70px;border-radius:8px;border-color:var(--bdm)}
-
-/* view mode: stop expand sections show cleanly */
-body.view-mode .expand-sec[data-open]{display:block}
+body.view-mode .t-field input{font-size:.76rem;color:var(--muted);pointer-events:none;flex:none;width:auto;min-width:0}
+body.view-mode .t-field+.t-field::before{content:'·';color:var(--dim);font-size:.85rem;margin:0 5px;flex-shrink:0}
 
 /* overnight in view mode */
 body.view-mode .dc-inner{padding:10px 14px;background:rgba(139,92,246,.05)}
@@ -371,35 +447,39 @@ body.view-mode .stops-wrap{padding-left:22px}
 body.view-mode .stops-wrap::before{opacity:.4}
 body.view-mode .add-controls{display:none}
 
-/* day header in view mode */
-body.view-mode .day-header{flex-wrap:nowrap}
-body.view-mode .day-badge{background:var(--acs);border-color:var(--ac)}
-body.view-mode .day-title{pointer-events:none}
-body.view-mode .day-date{pointer-events:none}
-body.view-mode .delete-day-btn{display:none}
-body.view-mode .day-badge-num{pointer-events:none}
+/* dow badge shows in view mode */
+body.view-mode .dow-badge{display:inline-flex}
+
+/* ── compact view mode ── */
+body.compact-view.view-mode .stop-card{
+  padding:6px 10px 6px 20px;margin-bottom:4px;border-radius:6px}
+body.compact-view.view-mode .stop-card::before{top:14px;width:6px;height:6px}
+body.compact-view.view-mode .stop-row-1{margin-bottom:0}
+body.compact-view.view-mode .stop-row-2,
+body.compact-view.view-mode .expand-sec{display:none!important}
+body.compact-view.view-mode .time-input{font-size:.78rem;width:58px}
+body.compact-view.view-mode .loc-input{font-size:.82rem}
+body.compact-view.view-mode .cost-wrap{padding:1px 7px}
+body.compact-view.view-mode .cost-wrap span,
+body.compact-view.view-mode .cost-wrap input{font-size:.75rem}
+body.compact-view.view-mode .transit-block{padding:3px 0 3px 10px}
+body.compact-view.view-mode .stops-wrap{padding-left:20px}
+body.compact-view.view-mode .day-header{margin-bottom:14px}
 
 /* ══════════════════════════════════════════
-   PDF OUTPUT (always rendered at 390px mobile)
+   PDF OUTPUT
 ══════════════════════════════════════════ */
 #pdf-stage{
-  display:none;
-  position:fixed;left:-9999px;top:0;
-  width:390px;
-  font-family:'DM Sans',sans-serif;
+  display:none;position:fixed;left:-9999px;top:0;
+  width:390px;font-family:'DM Sans',sans-serif;
   background:#07070f;color:#e8edf5;
-  padding:24px 20px 32px;
-  font-size:14px;line-height:1.6
-}
-
-/* PDF internal styles — mobile view layout */
+  padding:24px 20px 32px;font-size:14px;line-height:1.6}
 #pdf-stage .p-cover{width:100%;height:160px;border-radius:12px;overflow:hidden;margin-bottom:18px;
   background:linear-gradient(135deg,#0d0d1a,#12122a)}
 #pdf-stage .p-cover img{width:100%;height:100%;object-fit:cover;display:block;opacity:.85}
 #pdf-stage .p-title{font-family:'Syne',sans-serif;font-size:1.7rem;font-weight:800;
   letter-spacing:-.03em;line-height:1.15;margin-bottom:4px}
 #pdf-stage .p-sub{font-size:.85rem;color:#6a7a96;margin-bottom:32px}
-
 #pdf-stage .p-day{margin-bottom:28px}
 #pdf-stage .p-day-hd{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:10px;
   border-bottom:1px solid rgba(0,200,168,.3)}
@@ -413,7 +493,6 @@ body.view-mode .day-badge-num{pointer-events:none}
 #pdf-stage .p-day-dow{font-size:.7rem;font-weight:600;color:#00c8a8;
   background:rgba(0,200,168,.12);border:1px solid rgba(0,200,168,.25);
   padding:2px 7px;border-radius:100px}
-
 #pdf-stage .p-stops{padding-left:16px;border-left:2px solid rgba(0,200,168,.25)}
 #pdf-stage .p-stop{padding:10px 0;border-bottom:1px solid #181828;position:relative}
 #pdf-stage .p-stop:last-child{border-bottom:none}
@@ -428,8 +507,7 @@ body.view-mode .day-badge-num{pointer-events:none}
   background:rgba(0,200,168,.06);border:1px solid #222238;
   padding:2px 8px;border-radius:6px;flex-shrink:0;white-space:nowrap}
 #pdf-stage .p-stop-r2{display:flex;align-items:center;gap:6px;margin-bottom:4px;padding-left:2px}
-#pdf-stage .p-maps{font-size:.74rem;color:#00c8a8;opacity:.8;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+#pdf-stage .p-maps{font-size:.74rem;color:#00c8a8;opacity:.8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
 #pdf-stage .p-note{font-size:.78rem;color:#6a7a96;padding-left:2px;margin-bottom:4px;white-space:pre-wrap}
 #pdf-stage .p-todos{padding-left:2px}
 #pdf-stage .p-todo{display:flex;align-items:flex-start;gap:5px;font-size:.76rem;color:#6a7a96;margin-bottom:2px}
@@ -438,12 +516,9 @@ body.view-mode .day-badge-num{pointer-events:none}
 #pdf-stage .p-todo-box.chk{background:#00c8a8;border-color:#00c8a8}
 #pdf-stage .p-todo-chk{color:#000;font-size:7px}
 #pdf-stage .p-todo.done span{text-decoration:line-through;opacity:.5}
-
-#pdf-stage .p-transit{display:flex;align-items:center;gap:6px;
-  margin:4px 0;padding-left:2px;font-size:.76rem;color:#6a7a96}
+#pdf-stage .p-transit{display:flex;align-items:center;gap:6px;margin:4px 0;padding-left:2px;font-size:.76rem;color:#6a7a96}
 #pdf-stage .p-transit-icon{flex-shrink:0}
 #pdf-stage .p-transit-sep{color:#3a4560}
-
 #pdf-stage .p-dc{background:rgba(139,92,246,.07);border:1px solid rgba(139,92,246,.25);
   border-radius:10px;padding:12px 14px;margin:0 0 20px;position:relative}
 #pdf-stage .p-dc::before{content:'';position:absolute;left:0;top:0;bottom:0;
@@ -460,16 +535,36 @@ body.view-mode .day-badge-num{pointer-events:none}
 </head>
 <body class="view-mode">
 
+<!-- Scroll progress bar -->
+<div class="scroll-bar" id="scroll-bar"></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Confetti canvas -->
+<canvas id="confetti-canvas"></canvas>
+
+<!-- Template popup -->
+<div class="tmpl-popup" id="tmpl-popup" onclick="if(event.target===this)closeTmpl()">
+  <div class="tmpl-sheet">
+    <div class="tmpl-title">
+      <span>⚡ Quick Templates</span>
+      <button class="tmpl-close" onclick="closeTmpl()">×</button>
+    </div>
+    <div class="tmpl-grid" id="tmpl-grid"></div>
+  </div>
+</div>
+
 <!-- Top bar -->
 <div class="top-bar">
   <div class="save-status">
     <div class="save-dot" id="save-dot"></div>
     <span id="save-text" style="font-size:.76rem;color:var(--muted)">Saved</span>
   </div>
-  <!-- Mode Toggle -->
   <div class="mode-toggle">
     <button class="mt-btn" id="mt-edit" onclick="setMode('edit')">✎ Edit</button>
     <button class="mt-btn active" id="mt-view" onclick="setMode('view')">👁 View</button>
+    <button class="mt-btn" id="mt-compact" onclick="setMode('compact')">≡ Compact</button>
   </div>
   <button onclick="clearSave()" class="btn-reset edit-only">↺</button>
 </div>
@@ -486,9 +581,16 @@ body.view-mode .day-badge-num{pointer-events:none}
     <span class="stat-val" id="total-stops">0</span>
   </div>
   <div class="ab-div"></div>
+  <div class="stat">
+    <span class="stat-lbl">Days</span>
+    <span class="stat-val" id="total-days">0</span>
+  </div>
+  <div class="ab-div"></div>
   <button onclick="addDay()" class="btn-secondary edit-only">+ Day</button>
-  <button onclick="downloadHTML()" class="btn-secondary">⬇ HTML</button>
-  <button onclick="downloadPDF()" class="btn-primary">⬇ PDF</button>
+  <button onclick="shareText()" class="btn-icon" title="Copy summary">📋</button>
+  <button onclick="downloadCSV()" class="btn-icon" title="Export CSV">CSV</button>
+  <button onclick="downloadHTML()" class="btn-icon" title="Download HTML">⬇</button>
+  <button onclick="downloadPDF()" class="btn-primary">PDF</button>
 </div>
 
 <!-- Main itinerary -->
@@ -503,42 +605,134 @@ body.view-mode .day-badge-num{pointer-events:none}
     </div>
     <input type="text" id="trip-title" class="title-input" value="My Trip" spellcheck="false">
     <input type="text" id="trip-subtitle" class="subtitle-input" placeholder="Dates · Destinations · Tagline…">
+    <!-- Trip stats strip -->
+    <div class="trip-stats" id="trip-stats">
+      <div class="ts-item">
+        <span class="ts-val" id="stats-days">0</span>
+        <span class="ts-lbl">Days</span>
+      </div>
+      <div class="ts-div"></div>
+      <div class="ts-item">
+        <span class="ts-val" id="stats-stops">0</span>
+        <span class="ts-lbl">Stops</span>
+      </div>
+      <div class="ts-div"></div>
+      <div class="ts-item">
+        <span class="ts-val" id="stats-budget">₹0</span>
+        <span class="ts-lbl">Budget</span>
+      </div>
+      <div class="ts-div"></div>
+      <div class="ts-item">
+        <span class="ts-val" id="stats-duration">—</span>
+        <span class="ts-lbl">Duration</span>
+      </div>
+    </div>
   </div>
   <div id="days-wrapper"></div>
 </div>
 
-<!-- Hidden PDF render stage -->
 <div id="pdf-stage"></div>
 
 <script>
 let dayCount = 1, saveTimer, currentMode = 'view';
 
-/* ── Mode ── */
-function setMode(m) {
-  currentMode = m;
-  document.body.classList.toggle('view-mode', m === 'view');
-  document.getElementById('mt-edit').classList.toggle('active', m === 'edit');
-  document.getElementById('mt-view').classList.toggle('active', m === 'view');
-  /* restore expand sections to show in view mode if they were opened */
+/* ══ Scroll progress bar ══ */
+window.addEventListener('scroll', () => {
+  const el = document.documentElement;
+  const pct = el.scrollTop / (el.scrollHeight - el.clientHeight) * 100;
+  document.getElementById('scroll-bar').style.width = pct + '%';
+}, {passive:true});
+
+/* ══ Toast ══ */
+let toastTimer;
+function showToast(msg, type='success') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2400);
 }
 
-/* ── Day-of-week badge ── */
+/* ══ Confetti ══ */
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const colors = ['#00c8a8','#f59e0b','#8b5cf6','#ec4899','#3b82f6','#f97316'];
+  const pieces = Array.from({length:80}, () => ({
+    x: Math.random() * canvas.width,
+    y: -10,
+    r: Math.random() * 6 + 3,
+    c: colors[Math.floor(Math.random()*colors.length)],
+    vx: (Math.random()-0.5)*4,
+    vy: Math.random()*4+2,
+    rot: Math.random()*360,
+    vrot: (Math.random()-0.5)*8
+  }));
+  let frame;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rot*Math.PI/180);
+      ctx.fillStyle = p.c; ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);
+      ctx.restore();
+      p.x+=p.vx; p.y+=p.vy; p.rot+=p.vrot; p.vy+=0.05;
+    });
+    if (pieces.some(p => p.y < canvas.height+20)) frame = requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  cancelAnimationFrame(frame); draw();
+}
+
+/* ══ Mode ══ */
+function setMode(m) {
+  currentMode = m;
+  const isCompact = m === 'compact';
+  const isView = m === 'view' || isCompact;
+  document.body.classList.toggle('view-mode', isView);
+  document.body.classList.toggle('compact-view', isCompact);
+  document.getElementById('mt-edit').classList.toggle('active', m === 'edit');
+  document.getElementById('mt-view').classList.toggle('active', m === 'view');
+  document.getElementById('mt-compact').classList.toggle('active', m === 'compact');
+}
+
+/* ══ Category utils ══ */
+const CAT_MAP = {
+  '📍 Explore':'explore','🍽️ Dining':'dining','🏨 Stay':'stay',
+  '✈️ Transit':'transit','🎭 Event':'event','🛍️ Shopping':'shopping'
+};
+function catKey(selectEl) {
+  const txt = selectEl.options[selectEl.selectedIndex]?.text || '';
+  return CAT_MAP[txt] || 'explore';
+}
+function updateStopCat(sel) {
+  sel.closest('.stop-card')?.setAttribute('data-cat', catKey(sel));
+  autoSave();
+}
+
+/* ══ Day-of-week badge ══ */
 function updateDow(input) {
-  const wrap = input.closest('.day-header');
-  if (!wrap) return;
-  const badge = wrap.querySelector('.dow-badge');
-  if (!badge) return;
+  const wrap = input.closest('.day-header'); if (!wrap) return;
+  const badge = wrap.querySelector('.dow-badge'); if (!badge) return;
   if (!input.value) { badge.textContent = ''; badge.style.display = 'none'; return; }
   const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-  /* parse yyyy-mm-dd safely */
-  const [y, mo, d] = input.value.split('-').map(Number);
-  const dt = new Date(y, mo - 1, d);
-  badge.textContent = days[dt.getDay()];
+  const [y,mo,d] = input.value.split('-').map(Number);
+  badge.textContent = days[new Date(y,mo-1,d).getDay()];
   badge.style.display = 'inline-flex';
   autoSave();
 }
 
-/* ── Expand toggles ── */
+/* ══ Day spend ══ */
+function updateDaySpend() {
+  document.querySelectorAll('.day-container').forEach(day => {
+    let t = 0;
+    day.querySelectorAll('.cost-val').forEach(i => t += parseFloat(i.value)||0);
+    const badge = day.querySelector('.day-spend');
+    if (badge) badge.textContent = t > 0 ? '₹' + t.toLocaleString('en-IN') : '';
+  });
+}
+
+/* ══ Expand toggles ══ */
 function toggleDiv(id, btn) {
   const el = document.getElementById(id);
   const on = el.style.display === 'block';
@@ -550,9 +744,10 @@ function toggleDiv(id, btn) {
 function handleTodo(e, cid) {
   if (e.key !== 'Enter' || !e.target.value.trim()) return;
   const id = 'td-' + Date.now();
+  const card = document.getElementById(cid).closest('.stop-card');
   document.getElementById(cid).insertAdjacentHTML('beforeend', `
     <div class="todo-item" id="${id}">
-      <input type="checkbox" onchange="autoSave()">
+      <input type="checkbox" onchange="checkTodoDone(this);autoSave()">
       <span contenteditable="true" onblur="autoSave()">${e.target.value.trim()}</span>
       <button class="del-stop edit-only" style="font-size:.85rem" onclick="document.getElementById('${id}').remove();autoSave()">✕</button>
     </div>`);
@@ -560,27 +755,44 @@ function handleTodo(e, cid) {
   autoSave();
 }
 
-/* ── Image processing ── */
-function processImage(e, targetId, isCover = false) {
+function checkTodoDone(cb) {
+  const card = cb.closest('.stop-card');
+  if (!card) return;
+  const items = card.querySelectorAll('.todo-item input[type="checkbox"]');
+  if (items.length > 0 && Array.from(items).every(c => c.checked)) {
+    launchConfetti();
+    showToast('All tasks done! 🎉');
+  }
+}
+
+/* ══ Day collapse ══ */
+function toggleDayCollapse(dayId) {
+  const day = document.getElementById(dayId);
+  if (!day) return;
+  day.classList.toggle('collapsed');
+  autoSave();
+}
+
+/* ══ Image processing ══ */
+function processImage(e, targetId, isCover=false) {
   const file = e.target.files[0]; if (!file) return;
   const reader = new FileReader();
   reader.onload = ev => {
     const img = new Image();
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      const maxW = isCover ? 1200 : 400, maxH = isCover ? 600 : 400;
+      const maxW = isCover?1200:400, maxH = isCover?600:400;
       let w = img.width, h = img.height;
-      if (w > h) { if (w > maxW) { h = Math.round(h*maxW/w); w = maxW; } }
-      else        { if (h > maxH) { w = Math.round(w*maxH/h); h = maxH; } }
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      const b64 = canvas.toDataURL('image/jpeg', .78);
+      if (w>h){if(w>maxW){h=Math.round(h*maxW/w);w=maxW;}}
+      else{if(h>maxH){w=Math.round(w*maxH/h);h=maxH;}}
+      canvas.width=w; canvas.height=h;
+      canvas.getContext('2d').drawImage(img,0,0,w,h);
+      const b64 = canvas.toDataURL('image/jpeg',.78);
       if (isCover) {
-        const t = document.getElementById(targetId);
-        t.src = b64; t.style.display = 'block';
+        const t=document.getElementById(targetId); t.src=b64; t.style.display='block';
       } else {
-        const wid = 'img-' + Date.now();
-        document.getElementById(targetId).insertAdjacentHTML('beforeend', `
+        const wid='img-'+Date.now();
+        document.getElementById(targetId).insertAdjacentHTML('beforeend',`
           <div class="gal-img" id="${wid}">
             <img src="${b64}" alt="">
             <button class="gal-rm edit-only" onclick="document.getElementById('${wid}').remove();autoSave()">✕</button>
@@ -594,19 +806,26 @@ function processImage(e, targetId, isCover = false) {
   e.target.value = '';
 }
 
-/* ── Transit pill selection ── */
-function selectMode(btn) {
-  btn.closest('.transit-block').querySelectorAll('.mode-pill').forEach(p => p.classList.remove('selected'));
-  btn.classList.add('selected');
-  autoSave();
-}
-function selectDcMode(btn) {
-  btn.closest('.dc-inner').querySelectorAll('.dc-pill').forEach(p => p.classList.remove('selected'));
-  btn.classList.add('selected');
-  autoSave();
+/* ══ Maps link click in view mode ══ */
+function openMapsLink(input) {
+  if (!document.body.classList.contains('view-mode')) return;
+  const v = input.value.trim();
+  if (!v) return;
+  const url = v.startsWith('http') ? v : 'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(v);
+  window.open(url, '_blank', 'noopener');
 }
 
-/* ── Overnight connector HTML ── */
+/* ══ Transit pill selection ══ */
+function selectMode(btn) {
+  btn.closest('.transit-block').querySelectorAll('.mode-pill').forEach(p=>p.classList.remove('selected'));
+  btn.classList.add('selected'); autoSave();
+}
+function selectDcMode(btn) {
+  btn.closest('.dc-inner').querySelectorAll('.dc-pill').forEach(p=>p.classList.remove('selected'));
+  btn.classList.add('selected'); autoSave();
+}
+
+/* ══ Overnight connector ══ */
 function dayConnectorHTML(dcId) {
   return `
   <div class="day-connector" id="dc-${dcId}">
@@ -629,7 +848,7 @@ function dayConnectorHTML(dcId) {
   </div>`;
 }
 
-/* ── Add Day ── */
+/* ══ Add Day ══ */
 function addDay() {
   const wrapper = document.getElementById('days-wrapper');
   const dayId = 'day-' + Date.now();
@@ -639,18 +858,21 @@ function addDay() {
       <div class="day-header">
         <div class="day-badge">
           <span class="day-badge-lbl">Day</span>
-          <input type="text" class="day-badge-num" value="${dayCount}" placeholder="0" maxlength="3" spellcheck="false">
+          <input type="text" class="day-badge-num" value="${dayCount}" placeholder="1" maxlength="3" spellcheck="false">
         </div>
         <input type="text" class="day-title" value="Day ${dayCount}" spellcheck="false">
+        <span class="day-spend"></span>
         <div class="day-date-wrap">
           <input type="date" class="day-date" onchange="updateDow(this)">
           <span class="dow-badge"></span>
         </div>
+        <button class="day-collapse-btn" onclick="toggleDayCollapse('${dayId}')" title="Collapse day">⌄</button>
         <button class="delete-day-btn edit-only" onclick="removeDay('${dayId}')">Remove</button>
       </div>
       <div class="stops-wrap" id="sw-${dayId}"></div>
       <div class="add-controls edit-only">
         <button class="btn-add-stop" onclick="addStop('${dayId}')">+ Add Stop</button>
+        <button class="btn-template" onclick="openTmpl('${dayId}')" title="Templates">⚡</button>
       </div>
     </div>`);
   new Sortable(document.getElementById('sw-'+dayId), {animation:180,handle:'.drag-handle',onEnd:autoSave});
@@ -664,11 +886,10 @@ function removeDay(dayId) {
   const prev = day.previousElementSibling, next = day.nextElementSibling;
   if (prev && prev.classList.contains('day-connector')) prev.remove();
   else if (next && next.classList.contains('day-connector')) next.remove();
-  day.remove();
-  autoSave();
+  day.remove(); autoSave();
 }
 
-/* ── Add Stop ── */
+/* ══ Add Stop ══ */
 function addStop(dayId) {
   const container = document.getElementById('sw-'+dayId);
   const stopId = 's-' + Date.now();
@@ -688,22 +909,33 @@ function addStop(dayId) {
         </div>
       </div>`);
   }
-  container.insertAdjacentHTML('beforeend', `
-    <div class="stop-card" id="${stopId}">
+  container.insertAdjacentHTML('beforeend', makeStopHTML(stopId));
+  autoSave();
+}
+
+function makeStopHTML(stopId, prefill={}) {
+  const {time='',loc='',cat='📍 Explore',cost='',maps='',note=''} = prefill;
+  const catKey2 = CAT_MAP[cat] || 'explore';
+  return `
+    <div class="stop-card" id="${stopId}" data-cat="${catKey2}">
       <div class="drag-handle edit-only">⠿</div>
       <div class="stop-content">
         <div class="stop-row-1">
-          <input type="time" class="time-input">
-          <input type="text" class="loc-input" placeholder="Location or Activity…" spellcheck="false">
-          <div class="cost-wrap"><span>₹</span><input type="number" class="cost-val" placeholder="0" min="0" oninput="updateTotals()"></div>
+          <input type="time" class="time-input" value="${time}">
+          <input type="text" class="loc-input" placeholder="Location or Activity…" spellcheck="false" value="${loc}">
+          <div class="cost-wrap"><span>₹</span><input type="number" class="cost-val" placeholder="0" min="0" value="${cost}" oninput="updateTotals()"></div>
           <button class="del-stop edit-only" onclick="deleteStop('${stopId}')">✕</button>
         </div>
         <div class="stop-row-2">
-          <select class="cat-select">
-            <option>📍 Explore</option><option>🍽️ Dining</option><option>🏨 Stay</option>
-            <option>✈️ Transit</option><option>🎭 Event</option><option>🛍️ Shopping</option>
+          <select class="cat-select" onchange="updateStopCat(this)">
+            <option${cat==='📍 Explore'?' selected':''}>📍 Explore</option>
+            <option${cat==='🍽️ Dining'?' selected':''}>🍽️ Dining</option>
+            <option${cat==='🏨 Stay'?' selected':''}>🏨 Stay</option>
+            <option${cat==='✈️ Transit'?' selected':''}>✈️ Transit</option>
+            <option${cat==='🎭 Event'?' selected':''}>🎭 Event</option>
+            <option${cat==='🛍️ Shopping'?' selected':''}>🛍️ Shopping</option>
           </select>
-          <input type="text" class="maps-input" placeholder="Maps link or note…">
+          <input type="text" class="maps-input" placeholder="Maps link or note…" value="${maps}" onclick="openMapsLink(this)">
         </div>
         <div class="stop-toolbar edit-only">
           <button class="tool-btn" id="nb-${stopId}" onclick="toggleDiv('n-${stopId}',this)">📝 Note</button>
@@ -711,9 +943,10 @@ function addStop(dayId) {
           <label class="tool-btn" style="cursor:pointer">🖼 Photo
             <input type="file" accept="image/*" onchange="processImage(event,'g-${stopId}')">
           </label>
+          <button class="tool-btn" onclick="duplicateStop('${stopId}')">⧉ Dupe</button>
         </div>
         <div id="n-${stopId}" class="expand-sec">
-          <textarea class="notes-area" placeholder="Booking refs, tips, details…"></textarea>
+          <textarea class="notes-area" placeholder="Booking refs, tips, details…">${note}</textarea>
         </div>
         <div id="t-${stopId}" class="expand-sec">
           <div id="tl-${stopId}"></div>
@@ -721,26 +954,142 @@ function addStop(dayId) {
         </div>
         <div id="g-${stopId}" class="gallery"></div>
       </div>
-    </div>`);
+    </div>`;
+}
+
+/* ══ Duplicate stop ══ */
+function duplicateStop(stopId) {
+  const card = document.getElementById(stopId); if (!card) return;
+  const newId = 's-' + Date.now();
+  const time  = card.querySelector('.time-input')?.value || '';
+  const loc   = card.querySelector('.loc-input')?.value || '';
+  const cat   = card.querySelector('.cat-select')?.value || '📍 Explore';
+  const cost  = card.querySelector('.cost-val')?.value || '';
+  const maps  = card.querySelector('.maps-input')?.value || '';
+  const note  = card.querySelector('.notes-area')?.value || '';
+  card.insertAdjacentHTML('afterend', makeStopHTML(newId, {time,loc,cat,cost,maps,note}));
   autoSave();
+  showToast('Stop duplicated');
 }
 
 function deleteStop(stopId) {
   const card = document.getElementById(stopId); if (!card) return;
   const prev = card.previousElementSibling;
   if (prev && prev.classList.contains('transit-block')) prev.remove();
-  card.remove();
-  autoSave();
+  card.remove(); autoSave();
 }
 
+/* ══ Templates ══ */
+const TEMPLATES = [
+  { icon:'🏨', name:'Hotel Day', desc:'Checkout → Sightseeing → Lunch → Hotel',
+    stops:[
+      {time:'09:00',loc:'Hotel Checkout',cat:'🏨 Stay'},
+      {time:'10:00',loc:'Morning Sightseeing',cat:'📍 Explore'},
+      {time:'13:00',loc:'Lunch',cat:'🍽️ Dining'},
+      {time:'15:00',loc:'Evening Activity',cat:'🎭 Event'},
+      {time:'19:00',loc:'Dinner',cat:'🍽️ Dining'},
+      {time:'21:00',loc:'Hotel Check-in',cat:'🏨 Stay'},
+    ]},
+  { icon:'🏔️', name:'Trek Day', desc:'Early start → Trek → Camp',
+    stops:[
+      {time:'05:30',loc:'Base Camp',cat:'📍 Explore'},
+      {time:'06:00',loc:'Trek Begins',cat:'📍 Explore'},
+      {time:'12:00',loc:'Summit / Viewpoint',cat:'📍 Explore'},
+      {time:'13:00',loc:'Packed Lunch',cat:'🍽️ Dining'},
+      {time:'17:00',loc:'Return to Base',cat:'📍 Explore'},
+      {time:'19:00',loc:'Camp Dinner',cat:'🍽️ Dining'},
+    ]},
+  { icon:'🛍️', name:'City Day', desc:'Market → Café → Museum → Dinner',
+    stops:[
+      {time:'09:00',loc:'Morning Market',cat:'🛍️ Shopping'},
+      {time:'11:00',loc:'Café / Breakfast',cat:'🍽️ Dining'},
+      {time:'12:30',loc:'Museum / Gallery',cat:'🎭 Event'},
+      {time:'15:00',loc:'City Walk',cat:'📍 Explore'},
+      {time:'17:00',loc:'Souvenir Shopping',cat:'🛍️ Shopping'},
+      {time:'19:30',loc:'Dinner',cat:'🍽️ Dining'},
+    ]},
+  { icon:'✈️', name:'Travel Day', desc:'Transit + arrival',
+    stops:[
+      {time:'05:00',loc:'Hotel Checkout',cat:'🏨 Stay'},
+      {time:'06:00',loc:'Airport / Station',cat:'✈️ Transit'},
+      {time:'14:00',loc:'Arrive Destination',cat:'✈️ Transit'},
+      {time:'15:30',loc:'Hotel Check-in',cat:'🏨 Stay'},
+      {time:'18:00',loc:'Explore Neighbourhood',cat:'📍 Explore'},
+      {time:'20:00',loc:'Welcome Dinner',cat:'🍽️ Dining'},
+    ]},
+];
+let tmplTarget = null;
+function openTmpl(dayId) {
+  tmplTarget = dayId;
+  const grid = document.getElementById('tmpl-grid');
+  grid.innerHTML = TEMPLATES.map((t,i) => `
+    <div class="tmpl-card" onclick="applyTemplate(${i})">
+      <div class="tmpl-card-icon">${t.icon}</div>
+      <div class="tmpl-card-name">${t.name}</div>
+      <div class="tmpl-card-desc">${t.desc}</div>
+    </div>`).join('');
+  document.getElementById('tmpl-popup').classList.add('open');
+}
+function closeTmpl() { document.getElementById('tmpl-popup').classList.remove('open'); }
+function applyTemplate(idx) {
+  if (!tmplTarget) return;
+  const t = TEMPLATES[idx];
+  const container = document.getElementById('sw-'+tmplTarget);
+  container.innerHTML = '';
+  t.stops.forEach((s, i) => {
+    const stopId = 's-' + (Date.now() + i);
+    if (i > 0) {
+      container.insertAdjacentHTML('beforeend',`
+        <div class="transit-block" id="tr-${stopId}">
+          <div class="transit-top">
+            <button class="mode-pill selected" onclick="selectMode(this)">🚗 Car</button>
+            <button class="mode-pill" onclick="selectMode(this)">🏍 Bike</button>
+            <button class="mode-pill" onclick="selectMode(this)">🚆 Train</button>
+            <button class="mode-pill" onclick="selectMode(this)">🚌 Bus</button>
+            <button class="mode-pill" onclick="selectMode(this)">🚶 Walk</button>
+          </div>
+          <div class="transit-bottom">
+            <div class="t-field"><span class="t-flbl">Dist</span><input type="text" placeholder="5 km"></div>
+            <div class="t-field"><span class="t-flbl">Time</span><input type="text" placeholder="20 min"></div>
+          </div>
+        </div>`);
+    }
+    container.insertAdjacentHTML('beforeend', makeStopHTML(stopId, s));
+  });
+  closeTmpl(); autoSave();
+  showToast(`Template applied: ${t.name}`);
+}
+
+/* ══ Totals ══ */
 function updateTotals() {
-  let t = 0;
-  document.querySelectorAll('.cost-val').forEach(i => t += parseFloat(i.value)||0);
-  document.getElementById('total-cost').textContent = t.toLocaleString('en-IN');
-  document.getElementById('total-stops').textContent = document.querySelectorAll('.stop-card').length;
+  let cost = 0, stops = 0, days = 0;
+  document.querySelectorAll('.cost-val').forEach(i => cost += parseFloat(i.value)||0);
+  stops = document.querySelectorAll('.stop-card').length;
+  days = document.querySelectorAll('.day-container').length;
+  document.getElementById('total-cost').textContent = cost.toLocaleString('en-IN');
+  document.getElementById('total-stops').textContent = stops;
+  document.getElementById('total-days').textContent = days;
+  // Stats strip
+  document.getElementById('stats-days').textContent = days;
+  document.getElementById('stats-stops').textContent = stops;
+  document.getElementById('stats-budget').textContent = '₹' + cost.toLocaleString('en-IN');
+  // Duration: find earliest & latest times
+  const times = [];
+  document.querySelectorAll('.time-input').forEach(t => { if(t.value) times.push(t.value); });
+  if (times.length >= 2) {
+    times.sort();
+    const [h1,m1] = times[0].split(':').map(Number);
+    const [h2,m2] = times[times.length-1].split(':').map(Number);
+    const diff = (h2*60+m2) - (h1*60+m1);
+    if (diff > 0) {
+      const hh = Math.floor(diff/60), mm = diff%60;
+      document.getElementById('stats-duration').textContent = hh+'h'+(mm?mm+'m':'');
+    } else { document.getElementById('stats-duration').textContent = '—'; }
+  } else { document.getElementById('stats-duration').textContent = '—'; }
+  updateDaySpend();
 }
 
-/* ── Auto-save ── */
+/* ══ Auto-save ══ */
 function autoSave() {
   const dot = document.getElementById('save-dot'), txt = document.getElementById('save-text');
   dot.classList.add('saving'); txt.textContent = 'Saving…';
@@ -752,7 +1101,7 @@ function autoSave() {
       el.checked ? el.setAttribute('checked','') : el.removeAttribute('checked'));
     document.querySelectorAll('select').forEach(el =>
       Array.from(el.options).forEach(o =>
-        o.value === el.value ? o.setAttribute('selected','') : o.removeAttribute('selected')));
+        o.value===el.value ? o.setAttribute('selected','') : o.removeAttribute('selected')));
     document.querySelectorAll('.mode-pill,.dc-pill').forEach(p =>
       p.classList.contains('selected') ? p.setAttribute('data-sel','1') : p.removeAttribute('data-sel'));
     document.querySelectorAll('.tool-btn.active').forEach(b => b.setAttribute('data-active','1'));
@@ -760,16 +1109,18 @@ function autoSave() {
       s.style.display==='block' ? s.setAttribute('data-open','1') : s.removeAttribute('data-open'));
     document.querySelectorAll('.dow-badge').forEach(b =>
       b.textContent ? b.setAttribute('data-dow', b.textContent) : b.removeAttribute('data-dow'));
-
+    // Save collapsed state
+    document.querySelectorAll('.day-container').forEach(d =>
+      d.classList.contains('collapsed') ? d.setAttribute('data-collapsed','1') : d.removeAttribute('data-collapsed'));
     const data = {
-      html:  document.getElementById('days-wrapper').innerHTML,
+      html: document.getElementById('days-wrapper').innerHTML,
       title: document.getElementById('trip-title').value,
-      sub:   document.getElementById('trip-subtitle').value,
+      sub: document.getElementById('trip-subtitle').value,
       cover: document.getElementById('main-cover').src,
       count: dayCount, mode: currentMode
     };
     try {
-      localStorage.setItem('itin_v4', JSON.stringify(data));
+      localStorage.setItem('itin_v5', JSON.stringify(data));
       dot.classList.remove('saving'); txt.textContent = 'Saved';
     } catch(e) {
       dot.classList.remove('saving');
@@ -782,89 +1133,178 @@ function autoSave() {
 document.addEventListener('input', autoSave);
 document.addEventListener('change', e => { if (!e.target.classList.contains('day-date')) autoSave(); });
 
-/* ── Load ── */
+/* ══ Load ══ */
 function loadData() {
-  const saved = localStorage.getItem('itin_v4');
-  if (saved) {
+  // Try new key first, fall back to old key
+  const raw = localStorage.getItem('itin_v5') || localStorage.getItem('itin_v4');
+  if (raw) {
     try {
-      const d = JSON.parse(saved);
+      const d = JSON.parse(raw);
       document.getElementById('days-wrapper').innerHTML = d.html || '';
-      document.getElementById('trip-title').value   = d.title || '';
-      document.getElementById('trip-subtitle').value = d.sub   || '';
+      document.getElementById('trip-title').value = d.title || '';
+      document.getElementById('trip-subtitle').value = d.sub || '';
       dayCount = d.count ?? 1;
       if (d.cover && d.cover.startsWith('data:')) {
         const img = document.getElementById('main-cover');
         img.src = d.cover; img.style.display = 'block';
       }
-      /* restore dow badges */
       document.querySelectorAll('.dow-badge[data-dow]').forEach(b => {
         b.textContent = b.getAttribute('data-dow'); b.style.display = 'inline-flex';
       });
+      document.querySelectorAll('.day-container[data-collapsed]').forEach(d => d.classList.add('collapsed'));
       document.querySelectorAll('.stops-wrap').forEach(sw =>
         new Sortable(sw, {animation:180,handle:'.drag-handle',onEnd:autoSave}));
+      // Restore cat data attributes
+      document.querySelectorAll('.stop-card').forEach(card => {
+        const sel = card.querySelector('.cat-select');
+        if (sel) card.setAttribute('data-cat', catKey(sel));
+      });
       if (d.mode) setMode(d.mode); else setMode('view');
       updateTotals();
     } catch(e) { addDay(); setMode('view'); }
   } else { addDay(); setMode('view'); }
 }
-
 function clearSave() {
   if (confirm('Reset everything?')) {
-    localStorage.removeItem('itin_v4'); location.reload();
+    localStorage.removeItem('itin_v5');
+    localStorage.removeItem('itin_v4');
+    location.reload();
   }
 }
 
-/* ══════════════════════════════════════════
-   PDF — build a clean HTML representation
-   then render it at 390px mobile width
-══════════════════════════════════════════ */
+/* ══ Share / Export ══ */
+function shareText() {
+  const title = document.getElementById('trip-title').value || 'Itinerary';
+  const sub = document.getElementById('trip-subtitle').value;
+  let text = `🗺️ ${title}\n`;
+  if (sub) text += `${sub}\n`;
+  text += '\n';
+  document.querySelectorAll('#days-wrapper > .day-container, #days-wrapper > .day-connector').forEach(el => {
+    if (el.classList.contains('day-connector')) {
+      const sel = el.querySelector('.dc-pill.selected'); const mode = sel?.textContent.trim()||'';
+      const inputs = el.querySelectorAll('.dc-field input');
+      const dist = inputs[0]?.value||'', time2 = inputs[1]?.value||'';
+      text += `\n🌙 Overnight: ${[mode,dist,time2].filter(Boolean).join(' · ')}\n`;
+    } else {
+      const badgeNum = el.querySelector('.day-badge-num')?.value||'';
+      const dayName  = el.querySelector('.day-title')?.value||'';
+      const dateInp  = el.querySelector('.day-date')?.value||'';
+      let dateStr = '';
+      if (dateInp) {
+        const [y,mo,d2] = dateInp.split('-').map(Number);
+        dateStr = new Date(y,mo-1,d2).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+      }
+      text += `\n📅 Day ${badgeNum} — ${dayName}${dateStr?' ('+dateStr+')':''}\n`;
+      el.querySelectorAll('.stop-card, .transit-block').forEach(item => {
+        if (item.classList.contains('transit-block')) {
+          const m = item.querySelector('.mode-pill.selected')?.textContent.trim()||'';
+          const ti = item.querySelectorAll('.t-field input');
+          const d2 = ti[0]?.value||'', t2 = ti[1]?.value||'';
+          text += `  → ${[m,d2,t2].filter(Boolean).join(' · ')}\n`;
+        } else {
+          const t = item.querySelector('.time-input')?.value||'';
+          const loc = item.querySelector('.loc-input')?.value||'';
+          const cat = item.querySelector('.cat-select');
+          const catTxt = cat?.options[cat.selectedIndex]?.text||'';
+          const cost = item.querySelector('.cost-val')?.value||'';
+          let tf = t;
+          if (t) { const [hh,mm]=t.split(':').map(Number); tf=`${hh%12||12}:${String(mm).padStart(2,'0')} ${hh>=12?'PM':'AM'}`; }
+          text += `  ${tf||'--'} ${catTxt.split(' ')[0]||''} ${loc||'—'}${cost?' · ₹'+Number(cost).toLocaleString('en-IN'):''}\n`;
+        }
+      });
+    }
+  });
+  navigator.clipboard.writeText(text).then(() => showToast('Summary copied to clipboard! 📋')).catch(() => showToast('Copy failed', 'error'));
+}
+
+function downloadCSV() {
+  const rows = [['Day','Date','Time','Location','Category','Cost (₹)','Maps','Notes']];
+  document.querySelectorAll('#days-wrapper > .day-container').forEach(el => {
+    const badgeNum = el.querySelector('.day-badge-num')?.value||'';
+    const dayName  = el.querySelector('.day-title')?.value||'';
+    const dateInp  = el.querySelector('.day-date')?.value||'';
+    el.querySelectorAll('.stop-card').forEach(item => {
+      const t = item.querySelector('.time-input')?.value||'';
+      const loc = item.querySelector('.loc-input')?.value||'';
+      const cat = item.querySelector('.cat-select');
+      const catTxt = cat?.options[cat.selectedIndex]?.text||'';
+      const cost = item.querySelector('.cost-val')?.value||'';
+      const maps = item.querySelector('.maps-input')?.value||'';
+      const note = item.querySelector('.notes-area')?.value||'';
+      rows.push([`Day ${badgeNum} – ${dayName}`, dateInp, t, loc, catTxt, cost, maps, note]);
+    });
+  });
+  const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\ufeff'+csv], {type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.getElementById('trip-title').value.trim()||'Itinerary') + '.csv';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(a.href);
+  showToast('CSV downloaded');
+}
+
+function downloadHTML() {
+  document.querySelectorAll('input:not([type="file"]):not([type="checkbox"])').forEach(el => el.setAttribute('value', el.value));
+  document.querySelectorAll('textarea').forEach(el => el.innerHTML = el.value);
+  document.querySelectorAll('input[type="checkbox"]').forEach(el =>
+    el.checked ? el.setAttribute('checked','') : el.removeAttribute('checked'));
+  document.querySelectorAll('select').forEach(el =>
+    Array.from(el.options).forEach(o =>
+      o.value===el.value ? o.setAttribute('selected','') : o.removeAttribute('selected')));
+  document.querySelectorAll('.mode-pill,.dc-pill').forEach(p =>
+    p.classList.contains('selected') ? p.setAttribute('data-sel','1') : p.removeAttribute('data-sel'));
+  document.querySelectorAll('.expand-sec').forEach(s =>
+    s.style.display==='block' ? s.setAttribute('data-open','1') : s.removeAttribute('data-open'));
+  document.querySelectorAll('.dow-badge').forEach(b =>
+    b.textContent ? b.setAttribute('data-dow', b.textContent) : b.removeAttribute('data-dow'));
+  const coverImg = document.getElementById('main-cover');
+  if (coverImg?.src?.startsWith('data:')) { coverImg.setAttribute('src', coverImg.src); coverImg.style.display='block'; }
+  const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  const blob = new Blob([html], {type:'text/html;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.getElementById('trip-title').value.trim()||'Itinerary') + '.html';
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a); URL.revokeObjectURL(a.href);
+  showToast('HTML downloaded');
+}
+
+/* ══ PDF ══ */
 function buildPDFHTML() {
   const days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
   let html = '';
-
-  /* Cover */
   const coverSrc = document.getElementById('main-cover').src;
-  const title    = document.getElementById('trip-title').value;
-  const sub      = document.getElementById('trip-subtitle').value;
+  const title = document.getElementById('trip-title').value;
+  const sub = document.getElementById('trip-subtitle').value;
   html += `<div class="p-cover">`;
   if (coverSrc && coverSrc.startsWith('data:')) html += `<img src="${coverSrc}">`;
   html += `</div>`;
-  html += `<div class="p-title">${title || 'Itinerary'}</div>`;
+  html += `<div class="p-title">${title||'Itinerary'}</div>`;
   if (sub) html += `<div class="p-sub">${sub}</div>`;
 
-  /* Days */
   document.querySelectorAll('#days-wrapper > .day-container, #days-wrapper > .day-connector').forEach(el => {
     if (el.classList.contains('day-connector')) {
-      /* overnight */
       const selPill = el.querySelector('.dc-pill.selected');
-      const mode    = selPill ? selPill.textContent.trim() : '';
-      const inputs  = el.querySelectorAll('.dc-field input');
-      const dist    = inputs[0]?.value || '';
-      const time    = inputs[1]?.value || '';
-      html += `<div class="p-dc">
-        <div class="p-dc-head"><div class="p-dc-moon">🌙</div><div class="p-dc-lbl">Overnight Journey</div></div>
-        <div class="p-dc-row">`;
+      const mode = selPill ? selPill.textContent.trim() : '';
+      const inputs = el.querySelectorAll('.dc-field input');
+      const dist = inputs[0]?.value||'', time2 = inputs[1]?.value||'';
+      html += `<div class="p-dc"><div class="p-dc-head"><div class="p-dc-moon">🌙</div><div class="p-dc-lbl">Overnight Journey</div></div><div class="p-dc-row">`;
       if (mode) html += `<span>${mode}</span>`;
       if (dist) html += `<span class="p-dc-sep">·</span><span>${dist}</span>`;
-      if (time) html += `<span class="p-dc-sep">·</span><span>${time}</span>`;
+      if (time2) html += `<span class="p-dc-sep">·</span><span>${time2}</span>`;
       html += `</div></div>`;
     } else {
-      /* day */
-      const badgeNum = el.querySelector('.day-badge-num')?.value || '';
-      const dayName  = el.querySelector('.day-title')?.value || '';
-      const dateVal  = el.querySelector('.day-date')?.value || '';
-      let dateStr = '', dowStr = '';
+      const badgeNum = el.querySelector('.day-badge-num')?.value||'';
+      const dayName  = el.querySelector('.day-title')?.value||'';
+      const dateVal  = el.querySelector('.day-date')?.value||'';
+      let dateStr='',dowStr='';
       if (dateVal) {
-        const [y,mo,d] = dateVal.split('-').map(Number);
-        const dt = new Date(y, mo-1, d);
-        dowStr  = days[dt.getDay()];
-        dateStr = dt.toLocaleDateString('en-IN', {day:'numeric',month:'short',year:'numeric'});
+        const [y,mo,d2]=dateVal.split('-').map(Number), dt=new Date(y,mo-1,d2);
+        dowStr=days[dt.getDay()];
+        dateStr=dt.toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
       }
-
-      html += `<div class="p-day">
-        <div class="p-day-hd">
-          <div class="p-day-badge"><span class="p-day-badge-lbl">Day</span><span class="p-day-badge-num">${badgeNum}</span></div>
-          <span class="p-day-name">${dayName}</span>`;
+      html += `<div class="p-day"><div class="p-day-hd"><div class="p-day-badge"><span class="p-day-badge-lbl">Day</span><span class="p-day-badge-num">${badgeNum}</span></div><span class="p-day-name">${dayName}</span>`;
       if (dateStr) html += `<span class="p-day-date">${dateStr}</span>`;
       if (dowStr)  html += `<span class="p-day-dow">${dowStr}</span>`;
       html += `</div><div class="p-stops">`;
@@ -872,126 +1312,63 @@ function buildPDFHTML() {
       el.querySelectorAll('.stop-card, .transit-block').forEach(item => {
         if (item.classList.contains('transit-block')) {
           const selPill = item.querySelector('.mode-pill.selected');
-          const mode    = selPill ? selPill.textContent.trim() : '';
-          const tInputs = item.querySelectorAll('.t-field input');
-          const dist    = tInputs[0]?.value || '';
-          const time    = tInputs[1]?.value || '';
+          const mode = selPill ? selPill.textContent.trim() : '';
+          const ti = item.querySelectorAll('.t-field input');
+          const dist=ti[0]?.value||'', time2=ti[1]?.value||'';
           html += `<div class="p-transit"><span class="p-transit-icon">${mode}</span>`;
           if (dist) html += `<span class="p-transit-sep">·</span><span>${dist}</span>`;
-          if (time) html += `<span class="p-transit-sep">·</span><span>${time}</span>`;
+          if (time2) html += `<span class="p-transit-sep">·</span><span>${time2}</span>`;
           html += `</div>`;
         } else {
-          /* stop card */
-          const time  = item.querySelector('.time-input')?.value || '';
-          const loc   = item.querySelector('.loc-input')?.value  || '';
-          const cat   = item.querySelector('.cat-select');
-          const catTxt = cat ? cat.options[cat.selectedIndex]?.text || '' : '';
-          const catEmoji = catTxt.split(' ')[0] || '';
-          const cost  = item.querySelector('.cost-val')?.value;
-          const maps  = item.querySelector('.maps-input')?.value || '';
-          const noteEl = item.querySelector('.notes-area');
-          const note  = noteEl?.value || '';
-          /* format time 24→12h */
+          const time = item.querySelector('.time-input')?.value||'';
+          const loc  = item.querySelector('.loc-input')?.value||'';
+          const cat  = item.querySelector('.cat-select');
+          const catTxt = cat ? cat.options[cat.selectedIndex]?.text||'' : '';
+          const catEmoji = catTxt.split(' ')[0]||'';
+          const cost = item.querySelector('.cost-val')?.value;
+          const maps = item.querySelector('.maps-input')?.value||'';
+          const note = item.querySelector('.notes-area')?.value||'';
           let timeFmt = time;
-          if (time) {
-            const [hh,mm] = time.split(':').map(Number);
-            const ampm = hh >= 12 ? 'PM' : 'AM';
-            timeFmt = `${hh%12||12}:${String(mm).padStart(2,'0')} ${ampm}`;
-          }
-
-          html += `<div class="p-stop"><div class="p-stop-dot"></div>
-            <div class="p-stop-r1">`;
+          if (time) { const [hh,mm]=time.split(':').map(Number); timeFmt=`${hh%12||12}:${String(mm).padStart(2,'0')} ${hh>=12?'PM':'AM'}`; }
+          html += `<div class="p-stop"><div class="p-stop-dot"></div><div class="p-stop-r1">`;
           if (timeFmt) html += `<span class="p-stop-time">${timeFmt}</span>`;
           if (catEmoji) html += `<span class="p-stop-cat">${catEmoji}</span>`;
-          html += `<span class="p-stop-loc">${loc || '—'}</span>`;
+          html += `<span class="p-stop-loc">${loc||'—'}</span>`;
           if (cost) html += `<span class="p-stop-cost">₹${Number(cost).toLocaleString('en-IN')}</span>`;
           html += `</div>`;
           if (maps) html += `<div class="p-stop-r2"><span class="p-maps">${maps}</span></div>`;
           if (note) html += `<div class="p-note">${note}</div>`;
-
-          /* todos */
           const todos = item.querySelectorAll('.todo-item');
           if (todos.length) {
             html += `<div class="p-todos">`;
             todos.forEach(td => {
               const checked = td.querySelector('input[type="checkbox"]')?.checked;
-              const txt     = td.querySelector('span')?.textContent || '';
-              html += `<div class="p-todo ${checked?'done':''}">
-                <div class="p-todo-box ${checked?'chk':''}">
-                  ${checked ? '<span class="p-todo-chk">✓</span>' : ''}
-                </div>
-                <span>${txt}</span></div>`;
+              const txt = td.querySelector('span')?.textContent||'';
+              html += `<div class="p-todo ${checked?'done':''}"><div class="p-todo-box ${checked?'chk':''}">${checked?'<span class="p-todo-chk">✓</span>':''}</div><span>${txt}</span></div>`;
             });
             html += `</div>`;
           }
           html += `</div>`;
         }
       });
-      html += `</div></div>`; /* /p-stops /p-day */
+      html += `</div></div>`;
     }
   });
   return html;
-}
-
-function downloadHTML() {
-  /* Serialize current state into DOM attributes (same as autoSave) */
-  document.querySelectorAll('input:not([type="file"]):not([type="checkbox"])').forEach(el => el.setAttribute('value', el.value));
-  document.querySelectorAll('textarea').forEach(el => el.innerHTML = el.value);
-  document.querySelectorAll('input[type="checkbox"]').forEach(el =>
-    el.checked ? el.setAttribute('checked','') : el.removeAttribute('checked'));
-  document.querySelectorAll('select').forEach(el =>
-    Array.from(el.options).forEach(o =>
-      o.value === el.value ? o.setAttribute('selected','') : o.removeAttribute('selected')));
-  document.querySelectorAll('.mode-pill,.dc-pill').forEach(p =>
-    p.classList.contains('selected') ? p.setAttribute('data-sel','1') : p.removeAttribute('data-sel'));
-  document.querySelectorAll('.expand-sec').forEach(s =>
-    s.style.display==='block' ? s.setAttribute('data-open','1') : s.removeAttribute('data-open'));
-  document.querySelectorAll('.dow-badge').forEach(b =>
-    b.textContent ? b.setAttribute('data-dow', b.textContent) : b.removeAttribute('data-dow'));
-  /* Capture cover image */
-  const coverImg = document.getElementById('main-cover');
-  if (coverImg && coverImg.src && coverImg.src.startsWith('data:')) {
-    coverImg.setAttribute('src', coverImg.src);
-    coverImg.style.display = 'block';
-  }
-
-  const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = (document.getElementById('trip-title').value.trim() || 'Itinerary') + '.html';
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(a.href);
 }
 
 function downloadPDF() {
   const stage = document.getElementById('pdf-stage');
   stage.innerHTML = buildPDFHTML();
   stage.style.display = 'block';
-
-  const filename = (document.getElementById('trip-title').value.trim() || 'Itinerary') + '.pdf';
-
+  const filename = (document.getElementById('trip-title').value.trim()||'Itinerary') + '.pdf';
   html2pdf().set({
-    margin:      [14, 12, 14, 12],
-    filename:    filename,
-    image:       { type: 'jpeg', quality: .97 },
-    html2canvas: {
-      scale:           2.5,
-      useCORS:         true,
-      backgroundColor: '#07070f',
-      windowWidth:     390,
-      scrollX:         0,
-      scrollY:         -window.scrollY,
-      logging:         false,
-    },
-    jsPDF:     { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    pagebreak: { mode: ['avoid-all','css'], before: '.p-day' }
-  }).from(stage).save().then(() => {
-    stage.style.display = 'none';
-    stage.innerHTML = '';
-  });
+    margin:[14,12,14,12], filename,
+    image:{type:'jpeg',quality:.97},
+    html2canvas:{scale:2.5,useCORS:true,backgroundColor:'#07070f',windowWidth:390,scrollX:0,scrollY:-window.scrollY,logging:false},
+    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+    pagebreak:{mode:['avoid-all','css'],before:'.p-day'}
+  }).from(stage).save().then(() => { stage.style.display='none'; stage.innerHTML=''; });
 }
 
 window.addEventListener('load', loadData);
