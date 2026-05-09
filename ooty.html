@@ -278,26 +278,29 @@ body.view-mode .day-header{flex-wrap:nowrap}
 body.view-mode .day-badge{background:var(--acs);border-color:var(--ac)}
 body.view-mode .delete-day-btn{display:none}
 
-/* stop card in view mode — clean & compact */
+/* stop card in view mode — clean & compact cards */
 body.view-mode .stop-card{
-  padding:14px 12px 10px 26px;
-  border:none;border-bottom:1px solid var(--bdm);
-  border-radius:0;box-shadow:none;background:transparent;margin-bottom:0}
-body.view-mode .stop-card:first-of-type{border-top:1px solid var(--bdm)}
+  padding:10px 12px 10px 22px;
+  border:1px solid var(--bdm);
+  border-radius:var(--rs);
+  box-shadow:none;
+  background:var(--surf);
+  margin-bottom:7px}
+body.view-mode .stop-card:hover{border-color:var(--bdh);box-shadow:none}
 body.view-mode .stop-card::after{display:none}
-body.view-mode .stop-card:hover{border-color:var(--bdm)}
-body.view-mode .stop-card::before{left:-20px;top:20px}
-body.view-mode .stop-row-1{flex-wrap:nowrap;margin-bottom:4px}
-body.view-mode .stop-row-2{margin-bottom:6px}
-body.view-mode .cost-wrap{background:none;border:none;padding:0}
-body.view-mode .cost-wrap span{font-size:.8rem}
-body.view-mode .cost-wrap input{font-size:.84rem;pointer-events:none}
-body.view-mode .del-stop{display:none}
-body.view-mode .cat-select{border:none;background:none;padding:0;pointer-events:none}
-body.view-mode .maps-input{pointer-events:none}
+body.view-mode .stop-card::before{left:-20px;top:18px;width:8px;height:8px}
+body.view-mode .stop-row-1{flex-wrap:nowrap;margin-bottom:3px;gap:8px}
+body.view-mode .stop-row-2{margin-bottom:4px;gap:6px}
+body.view-mode .cost-wrap{background:rgba(0,200,168,.07);border:1px solid rgba(0,200,168,.2);padding:2px 8px;border-radius:100px}
+body.view-mode .cost-wrap span{font-size:.75rem}
+body.view-mode .cost-wrap input{font-size:.8rem;pointer-events:none;width:44px}
+body.view-mode .time-input{font-size:.82rem;font-weight:700;color:var(--ac);width:68px;pointer-events:none}
+body.view-mode .loc-input{font-size:.88rem;font-weight:600;pointer-events:none}
+body.view-mode .cat-select{border:none;background:rgba(255,255,255,.04);padding:2px 6px;border-radius:100px;pointer-events:none;font-size:.72rem}
+body.view-mode .maps-input{pointer-events:none;font-size:.72rem;color:var(--ac);opacity:.75}
 body.view-mode .stop-toolbar{display:none}
 body.view-mode .notes-area{border:none!important;background:none!important;
-  resize:none;pointer-events:none;padding:0;font-size:.82rem;color:var(--muted);min-height:0}
+  resize:none;pointer-events:none;padding:0;font-size:.8rem;color:var(--muted);min-height:0;line-height:1.5}
 body.view-mode .todo-input{display:none}
 body.view-mode .todo-item input[type="checkbox"]{pointer-events:none}
 body.view-mode .gal-rm{display:none}
@@ -305,38 +308,76 @@ body.view-mode .expand-sec{pointer-events:none}
 
 /* transit in view mode */
 body.view-mode .transit-block{
-  display:flex;align-items:center;gap:8px;
-  border:none;border-left:2px solid var(--bdm);border-radius:0;
-  margin:0 0 0 -14px;padding:4px 0 4px 10px;background:none;
-  flex-wrap:nowrap}
-body.view-mode .transit-top{gap:0}
+  display:flex;align-items:center;gap:0;
+  border:none;border-radius:0;background:none;
+  margin:-2px 0 2px -14px;
+  padding:5px 0 5px 10px;
+  position:relative}
+body.view-mode .transit-block::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;
+  width:2px;background:var(--bdm)}
+body.view-mode .transit-top{display:flex;align-items:center;gap:0;flex-shrink:0}
 body.view-mode .mode-pill:not(.selected){display:none}
-body.view-mode .mode-pill.selected{border:none;background:none;padding:0;color:var(--muted);font-size:.8rem}
-body.view-mode .transit-bottom{border:none;margin:0;padding:0;gap:4px;flex-wrap:nowrap}
+body.view-mode .mode-pill.selected{
+  border:none;background:none;padding:0;
+  color:var(--muted);font-size:.78rem;font-weight:500;
+  display:flex;align-items:center;gap:3px}
+body.view-mode .transit-bottom{
+  display:flex;align-items:center;gap:0;
+  border:none;margin:0;padding:0;flex-wrap:nowrap}
+body.view-mode .transit-bottom::before{
+  content:'·';color:var(--dim);font-size:.85rem;
+  margin:0 5px;flex-shrink:0}
 body.view-mode .t-field{background:none;border:none;padding:0}
 body.view-mode .t-flbl{display:none}
-body.view-mode .t-field input{font-size:.78rem;pointer-events:none}
-body.view-mode .t-field+.t-field::before{content:'·';color:var(--dim);font-size:.8rem;flex-shrink:0}
+body.view-mode .t-field input{
+  font-size:.76rem;color:var(--muted);pointer-events:none;
+  width:auto;min-width:0}
+body.view-mode .t-field+.t-field::before{
+  content:'·';color:var(--dim);font-size:.85rem;
+  margin:0 5px;flex-shrink:0}
+
+/* ── dow badge shows in view mode ── */
+body.view-mode .dow-badge{display:inline-flex}
+
+/* view mode: title & header */
+body.view-mode .title-input{pointer-events:none}
+body.view-mode .subtitle-input{pointer-events:none}
+body.view-mode .cover-lbl{display:none}
+body.view-mode .cover-wrap{border:none}
+
+/* view mode: gallery */
+body.view-mode .gallery{gap:6px;margin-top:8px}
+body.view-mode .gal-img{width:70px;height:70px;border-radius:8px;border-color:var(--bdm)}
+
+/* view mode: stop expand sections show cleanly */
+body.view-mode .expand-sec[data-open]{display:block}
 
 /* overnight in view mode */
 body.view-mode .dc-inner{padding:10px 14px;background:rgba(139,92,246,.05)}
 body.view-mode .dc-inner::after{display:none}
-body.view-mode .dc-head{margin-bottom:8px}
+body.view-mode .dc-head{margin-bottom:6px}
 body.view-mode .dc-del{display:none}
 body.view-mode .dc-pill:not(.selected){display:none}
-body.view-mode .dc-pill.selected{border:none;background:none;padding:0;color:#c4b5fd;font-size:.8rem}
-body.view-mode .dc-field{background:none;border:none;padding:0}
+body.view-mode .dc-pill.selected{border:none;background:none;padding:0;color:#c4b5fd;font-size:.78rem;font-weight:500}
+body.view-mode .dc-row{align-items:center;gap:8px;flex-wrap:nowrap}
+body.view-mode .dc-field{background:none;border:none;padding:0;min-width:0;flex:none;gap:0}
 body.view-mode .dc-flbl{display:none}
-body.view-mode .dc-field input{font-size:.78rem;pointer-events:none}
-body.view-mode .dc-field+.dc-field::before{content:'·';color:var(--dim);font-size:.8rem;flex-shrink:0}
-body.view-mode .stops-wrap::before{opacity:.3}
+body.view-mode .dc-field input{font-size:.76rem;color:#c4b5fd;pointer-events:none;width:auto;min-width:0}
+body.view-mode .dc-field+.dc-field::before{content:'·';color:rgba(139,92,246,.5);font-size:.9rem;margin-right:8px}
 
 /* stops-wrap in view mode */
-body.view-mode .stops-wrap{padding-left:20px}
+body.view-mode .stops-wrap{padding-left:22px}
+body.view-mode .stops-wrap::before{opacity:.4}
 body.view-mode .add-controls{display:none}
 
-/* ── dow badge shows in view mode ── */
-body.view-mode .dow-badge{display:inline-flex}
+/* day header in view mode */
+body.view-mode .day-header{flex-wrap:nowrap}
+body.view-mode .day-badge{background:var(--acs);border-color:var(--ac)}
+body.view-mode .day-title{pointer-events:none}
+body.view-mode .day-date{pointer-events:none}
+body.view-mode .delete-day-btn{display:none}
+body.view-mode .day-badge-num{pointer-events:none}
 
 /* ══════════════════════════════════════════
    PDF OUTPUT (always rendered at 390px mobile)
@@ -417,7 +458,7 @@ body.view-mode .dow-badge{display:inline-flex}
 #pdf-stage .p-dc-sep{color:#3a4560}
 </style>
 </head>
-<body>
+<body class="view-mode">
 
 <!-- Top bar -->
 <div class="top-bar">
@@ -427,8 +468,8 @@ body.view-mode .dow-badge{display:inline-flex}
   </div>
   <!-- Mode Toggle -->
   <div class="mode-toggle">
-    <button class="mt-btn active" id="mt-edit" onclick="setMode('edit')">✎ Edit</button>
-    <button class="mt-btn" id="mt-view" onclick="setMode('view')">👁 View</button>
+    <button class="mt-btn" id="mt-edit" onclick="setMode('edit')">✎ Edit</button>
+    <button class="mt-btn active" id="mt-view" onclick="setMode('view')">👁 View</button>
   </div>
   <button onclick="clearSave()" class="btn-reset edit-only">↺</button>
 </div>
@@ -446,6 +487,7 @@ body.view-mode .dow-badge{display:inline-flex}
   </div>
   <div class="ab-div"></div>
   <button onclick="addDay()" class="btn-secondary edit-only">+ Day</button>
+  <button onclick="downloadHTML()" class="btn-secondary">⬇ HTML</button>
   <button onclick="downloadPDF()" class="btn-primary">⬇ PDF</button>
 </div>
 
@@ -469,7 +511,7 @@ body.view-mode .dow-badge{display:inline-flex}
 <div id="pdf-stage"></div>
 
 <script>
-let dayCount = 0, saveTimer, currentMode = 'edit';
+let dayCount = 0, saveTimer, currentMode = 'view';
 
 /* ── Mode ── */
 function setMode(m) {
@@ -760,10 +802,10 @@ function loadData() {
       });
       document.querySelectorAll('.stops-wrap').forEach(sw =>
         new Sortable(sw, {animation:180,handle:'.drag-handle',onEnd:autoSave}));
-      if (d.mode) setMode(d.mode);
+      if (d.mode) setMode(d.mode); else setMode('view');
       updateTotals();
-    } catch(e) { addDay(); }
-  } else { addDay(); }
+    } catch(e) { addDay(); setMode('view'); }
+  } else { addDay(); setMode('view'); }
 }
 
 function clearSave() {
@@ -889,6 +931,39 @@ function buildPDFHTML() {
     }
   });
   return html;
+}
+
+function downloadHTML() {
+  /* Serialize current state into DOM attributes (same as autoSave) */
+  document.querySelectorAll('input:not([type="file"]):not([type="checkbox"])').forEach(el => el.setAttribute('value', el.value));
+  document.querySelectorAll('textarea').forEach(el => el.innerHTML = el.value);
+  document.querySelectorAll('input[type="checkbox"]').forEach(el =>
+    el.checked ? el.setAttribute('checked','') : el.removeAttribute('checked'));
+  document.querySelectorAll('select').forEach(el =>
+    Array.from(el.options).forEach(o =>
+      o.value === el.value ? o.setAttribute('selected','') : o.removeAttribute('selected')));
+  document.querySelectorAll('.mode-pill,.dc-pill').forEach(p =>
+    p.classList.contains('selected') ? p.setAttribute('data-sel','1') : p.removeAttribute('data-sel'));
+  document.querySelectorAll('.expand-sec').forEach(s =>
+    s.style.display==='block' ? s.setAttribute('data-open','1') : s.removeAttribute('data-open'));
+  document.querySelectorAll('.dow-badge').forEach(b =>
+    b.textContent ? b.setAttribute('data-dow', b.textContent) : b.removeAttribute('data-dow'));
+  /* Capture cover image */
+  const coverImg = document.getElementById('main-cover');
+  if (coverImg && coverImg.src && coverImg.src.startsWith('data:')) {
+    coverImg.setAttribute('src', coverImg.src);
+    coverImg.style.display = 'block';
+  }
+
+  const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (document.getElementById('trip-title').value.trim() || 'Itinerary') + '.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
 }
 
 function downloadPDF() {
