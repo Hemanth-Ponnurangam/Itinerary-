@@ -291,9 +291,9 @@ body.view-mode .stop-card::after{display:none}
 body.view-mode .stop-card::before{left:-20px;top:18px;width:8px;height:8px}
 body.view-mode .stop-row-1{flex-wrap:nowrap;margin-bottom:3px;gap:8px}
 body.view-mode .stop-row-2{margin-bottom:4px;gap:6px}
-body.view-mode .cost-wrap{background:rgba(0,200,168,.07);border:1px solid rgba(0,200,168,.2);padding:2px 8px;border-radius:100px}
-body.view-mode .cost-wrap span{font-size:.75rem}
-body.view-mode .cost-wrap input{font-size:.8rem;pointer-events:none;width:44px}
+body.view-mode .cost-wrap{background:rgba(0,200,168,.07);border:1px solid rgba(0,200,168,.2);padding:3px 10px;border-radius:100px;flex-shrink:0}
+body.view-mode .cost-wrap span{font-size:.78rem}
+body.view-mode .cost-wrap input{font-size:.82rem;pointer-events:none;width:auto;min-width:20px}
 body.view-mode .time-input{font-size:.82rem;font-weight:700;color:var(--ac);width:68px;pointer-events:none}
 body.view-mode .loc-input{font-size:.88rem;font-weight:600;pointer-events:none}
 body.view-mode .cat-select{border:none;background:rgba(255,255,255,.04);padding:2px 6px;border-radius:100px;pointer-events:none;font-size:.72rem}
@@ -328,11 +328,11 @@ body.view-mode .transit-bottom{
 body.view-mode .transit-bottom::before{
   content:'·';color:var(--dim);font-size:.85rem;
   margin:0 5px;flex-shrink:0}
-body.view-mode .t-field{background:none;border:none;padding:0}
+body.view-mode .t-field{background:none;border:none;padding:0;flex:none}
 body.view-mode .t-flbl{display:none}
 body.view-mode .t-field input{
   font-size:.76rem;color:var(--muted);pointer-events:none;
-  width:auto;min-width:0}
+  flex:none;width:auto;min-width:0}
 body.view-mode .t-field+.t-field::before{
   content:'·';color:var(--dim);font-size:.85rem;
   margin:0 5px;flex-shrink:0}
@@ -511,7 +511,7 @@ body.view-mode .day-badge-num{pointer-events:none}
 <div id="pdf-stage"></div>
 
 <script>
-let dayCount = 0, saveTimer, currentMode = 'view';
+let dayCount = 1, saveTimer, currentMode = 'view';
 
 /* ── Mode ── */
 function setMode(m) {
@@ -791,7 +791,7 @@ function loadData() {
       document.getElementById('days-wrapper').innerHTML = d.html || '';
       document.getElementById('trip-title').value   = d.title || '';
       document.getElementById('trip-subtitle').value = d.sub   || '';
-      dayCount = d.count ?? 0;
+      dayCount = d.count ?? 1;
       if (d.cover && d.cover.startsWith('data:')) {
         const img = document.getElementById('main-cover');
         img.src = d.cover; img.style.display = 'block';
